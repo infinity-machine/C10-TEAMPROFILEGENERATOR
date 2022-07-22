@@ -1,118 +1,108 @@
-const inquirer = require('inquirer')
-const fs = require('fs')
+// REQUIRES
+const inquirer = require('inquirer');
+const fs = require('fs');
 const figlet = require('figlet');
-// PEOPLE
-function TeamMngr(name, empID, eMail, officeNum) {
-    this.name = name;
-    this.empID = empID;
-    this.eMail = eMail;
-    this.officeNum = officeNum;
+const chalk = require('chalk');
+const TeamMngr = require('./libs/team_manager');
+const TeamMngrAdmin = require('./libs/team_manager_admin')
+const Engineer = require('./libs/engineer.js');
+const Intern = require('./libs/intern.js');
+const { 
+    setUpPrompt, menuPrompt, addTMPrompt, addEngPrompt, addIntPrompt,
+} = require('./libs/prompts.js');
+// PUBLISH TEAM
+const toPublish = [];
+// .map, .join
+function publishTeam() {
+    fs.writeFile('team.html', JSON.stringify(toPublish), 
+        err => (err ? console.error(err) : console.log('TEAM PUBLISHED!'))
+    );
 }
-function Engineer(name, empID, eMail, gitHub) {
-    this.name = name;
-    this.empID = empID;
-    this.eMail = eMail;
-    this.gitHub = gitHub;
+// ADD INTERN
+function addInt() {
+    inquirer.prompt(addIntPrompt)
+        .then((data) => {
+            let { intName, intEmpID, intEMail, intSchool} = data;
+            int = new Intern(intName, intEmpID, intEMail, intSchool);
+            toPublish.push(int);
+            console.log(toPublish);
+            menu();
+            return int
+        });
 }
-function Intern(name, empID, eMail, school) {
-    this.name = name;
-    this.empID = empID;
-    this.eMail = eMail;
-    this.school = school;
+// ADD ENGINEER
+function addEng() {
+    inquirer.prompt(addEngPrompt)
+        .then((data) => {
+            let { engName, engEmpID, engEMail, engGitHub } = data;
+            let eng = new Engineer(engName, engEmpID, engEMail, engGitHub);
+            toPublish.push(eng);
+            console.log(toPublish);
+            menu();
+            return eng;
+        })
 }
-
-TeamMngr.prototype.hiHowAreYou = function() {
-    console.log(`shalom! my name is ${this.name} duuude!`)
+// ADD TEAM MANAGER
+function addTM() {
+    inquirer.prompt(addTMPrompt)
+        .then((data) => {
+            let { tMName, tMEmpID, tMEMail, tMOfficeNum } = data;
+            let tM = new TeamMngr(tMName, tMEmpID, tMEMail, tMOfficeNum);
+            toPublish.push(tM);
+            console.log(toPublish);
+            menu();
+            return tM;
+        })
 }
-// function validateOK(res) {
-//     if (res === 'ok') {return true}
-//     else {return 'ENTER OK TO PROCEED!'}
-//  }
-
-
-
-setupScript = [{
-    type: 'input',
-    name: '1',
-    message: 'TEAMPROFILEGENERATORBOT WILL GENERATE FOR YOU A VERY GOOD TEAM PROFILE!\nTYPE OK TO PROCEED',
-    validate: (answer) => {
-        if (answer === 'ok') {return true}
-        else {return 'ENTER OK TO PROCEED!'}
-    }
-},
-{
-    type: 'input',
-    name: '2',
-    message: 'WELCOME TEAM MANAGER ADMIN!\nENTER YOUR FULL NAME TO PROCEED'
-},
-{
-    type: 'input',
-    name: '3',
-    message: 'THE FOLLOWING QUESTIONS ARE FOR YOUR TEAM MANAGER ADMIN PROFILE\nTYPE OK TO PROCEED',
-    validate: (answer) => {
-        if (answer === 'ok') {return true}
-        else {return 'ENTER OK TO PROCEED!'}
-    }
-},
-{
-    type: 'input',
-    name: '4',
-    message: 'ENTER YOUR EMPLOYEE IDENTIFICATION NUMBER TO PROCEED'
-},
-{
-    type: 'input',
-    name: '5',
-    message: 'ENTER YOUR EMAIL ADDRESS TO PROCEED'
-},
-{
-    type: 'input',
-    name: '6',
-    message: 'ENTER YOUR OFFICE NUMBER TO PROCEED'
-}]
-// // // // // // // //
-menuScript = [{
-    type: 'input',
-    name: '0',
-    message: 'ENTER YOUR EMAIL ADDRESS TO PROCEED'
-}]
-
-
+// MAIN MENU
+function menu() {
+    return inquirer.prompt(menuPrompt)
+        .then((data) => {
+            if (data.mainMenu === 'ADD NEW TEAM MANAGER') {
+                addTM();
+            }
+            if (data.mainMenu === 'ADD NEW ENGINEER') {
+                addEng();
+            }
+            if (data.mainMenu === 'ADD NEW INTERN') {
+                addInt();
+            }
+            if (data.mainMenu === 'PUBLISH TEAM') {
+                publishTeam();
+            }
+            if (data.mainMenu === 'END PROGRAM') {
+                process.exit(0);
+            }
+        });
+}
+// SET UP / ADD TEAM MANAGER ADMIN
+function setUptMA() {
+    return inquirer.prompt(setUpPrompt)
+        .then((data) => {
+            let { tMAName, tMAEmpID, tMAEMail, tMAOfficeNum } = data;
+            tMA = new TeamMngrAdmin(tMAName, tMAEmpID, tMAEMail, tMAOfficeNum);
+            toPublish.push(tMA);
+            console.log(toPublish);
+            console.log(`HELLO ${tMAName}!\nYOU ARE NOW AT THE MAIN MENU\nSELECT AN OPTION TO PROCEED`);
+        })
+}
+// BANNER ON PROGRAM LAUNCH
 function launchProgram() {
-    figlet('TEAMPROFILEGENERATORBOT', function(err, banner) {
+    figlet('TEAMPROFILEGENERATORBOT', function (err, banner) {
         if (err) {
-            console.log('something went wrong...');
+            console.log(err);
             return;
         }
-        console.log(banner)
-        console.log('TEAMPROFILEGENERATORBOT COPYRIGHT 2022 SHLERM INDUSTRIAL SOLUTIONS CORPORATION')
+        console.log(chalk.blue(banner));
+        console.log('TEAMPROFILEGENERATORBOT COPYRIGHT 2022 SHLERM INDUSTRIAL SOLUTIONS CORPORATION');
     })
     return new Promise(resolve => {
         setTimeout(() => {
             resolve('resolved');
-        }, 3000)
+        }, 2000);
     });
 }
-
-async function introTPGB() {
-    await launchProgram();
-    inquirer.prompt(setupScript).then((data) => console.log(data));
-}
-
-introTPGB()
-
-
-
-
-
-
-
-
-
-// inquirer.prompt(introUI).then((data) => console.log(data));
-
-// async function menuTPGB() {
-//     const menu = await inquirerl
-// }
-// async function beginTPGB() {
-//     const adminData = inquirer.prompt(introUI)
-// }
+// CALLS
+launchProgram()
+    .then(setUptMA)
+    .then(menu);
