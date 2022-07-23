@@ -1,5 +1,11 @@
 //PROMPTS
 const inquirer = require('inquirer')
+
+// VALIDATION FUNCTIONS
+//create answer validation functions here to call in prompt 
+
+
+
 // SET UP ADMIN
 const setUpPrompt = [{
     type: 'input',
@@ -12,7 +18,7 @@ const setUpPrompt = [{
 },
 {
     type: 'input',
-    message: 'THE FOLLOWING QUESTIONS ARE FOR YOUR TEAM MANAGER ADMIN PROFILE\nTYPE OK TO PROCEED',
+    message: 'THE FOLLOWING QUESTIONS ARE FOR YOUR TEAM MANAGER ADMIN PROFILE\nENTER OK TO PROCEED',
     name: 'ok2',
     validate: (answer) => {
         if (answer === 'ok') { return true }
@@ -59,6 +65,7 @@ const menuPrompt = [{
         new inquirer.Separator(),
     ]
 }]
+
 // ADD TEAM MANAGER
 const addTMPrompt = [{
     type: 'input',
@@ -80,6 +87,7 @@ const addTMPrompt = [{
     name: 'tMOfficeNum',
     message: 'ENTER YOUR OFFICE NUMBER TO PROCEED'
 }]
+
 // ADD ENGINEER
 const addEngPrompt = [{
     type: 'input',
@@ -101,6 +109,7 @@ const addEngPrompt = [{
     name: 'engGitHub',
     message: 'ENTER GITHUB USERNAME OF NEW ENGINEER'
 }]
+
 // ADD INTERN
 const addIntPrompt = [{
     type: 'input',
@@ -123,6 +132,7 @@ const addIntPrompt = [{
     message: 'ENTER SCHOOL OF NEW INTERN'
 }]
 
+// EXPORTS
 module.exports = {
     setUpPrompt,
     menuPrompt,

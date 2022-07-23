@@ -7,53 +7,57 @@ const TeamMngr = require('./libs/team_manager');
 const TeamMngrAdmin = require('./libs/team_manager_admin')
 const Engineer = require('./libs/engineer.js');
 const Intern = require('./libs/intern.js');
-const { 
+const {
     setUpPrompt, menuPrompt, addTMPrompt, addEngPrompt, addIntPrompt,
 } = require('./libs/prompts.js');
+
 // PUBLISH TEAM
 const toPublish = [];
-// .map, .join
+// .map, .join, somethin like that process the data then write to page using template literal
 function publishTeam() {
-    fs.writeFile('team.html', JSON.stringify(toPublish), 
+    fs.writeFile('team.html', JSON.stringify(toPublish),
         err => (err ? console.error(err) : console.log('TEAM PUBLISHED!'))
     );
+
 }
+
 // ADD INTERN
 function addInt() {
-    inquirer.prompt(addIntPrompt)
+    return inquirer.prompt(addIntPrompt)
         .then((data) => {
-            let { intName, intEmpID, intEMail, intSchool} = data;
+            let { intName, intEmpID, intEMail, intSchool } = data;
             int = new Intern(intName, intEmpID, intEMail, intSchool);
             toPublish.push(int);
-            console.log(toPublish);
+            console.log(`INTERN ${intName} ADDED TO TEAM ROSTER!`)
             menu();
-            return int
         });
 }
+
 // ADD ENGINEER
 function addEng() {
-    inquirer.prompt(addEngPrompt)
+    return inquirer.prompt(addEngPrompt)
         .then((data) => {
             let { engName, engEmpID, engEMail, engGitHub } = data;
             let eng = new Engineer(engName, engEmpID, engEMail, engGitHub);
             toPublish.push(eng);
-            console.log(toPublish);
+            console.log(`ENGINEER ${engName} ADDED TO TEAM ROSTER!`)
             menu();
-            return eng;
-        })
+        });
 }
+
 // ADD TEAM MANAGER
 function addTM() {
-    inquirer.prompt(addTMPrompt)
+    return inquirer.prompt(addTMPrompt)
         .then((data) => {
             let { tMName, tMEmpID, tMEMail, tMOfficeNum } = data;
             let tM = new TeamMngr(tMName, tMEmpID, tMEMail, tMOfficeNum);
             toPublish.push(tM);
-            console.log(toPublish);
+            console.log(`TEAM MANAGER ${tMName} ADDED TO TEAM ROSTER!`)
             menu();
-            return tM;
-        })
+
+        });
 }
+
 // MAIN MENU
 function menu() {
     return inquirer.prompt(menuPrompt)
@@ -75,6 +79,7 @@ function menu() {
             }
         });
 }
+
 // SET UP / ADD TEAM MANAGER ADMIN
 function setUptMA() {
     return inquirer.prompt(setUpPrompt)
@@ -82,10 +87,10 @@ function setUptMA() {
             let { tMAName, tMAEmpID, tMAEMail, tMAOfficeNum } = data;
             tMA = new TeamMngrAdmin(tMAName, tMAEmpID, tMAEMail, tMAOfficeNum);
             toPublish.push(tMA);
-            console.log(toPublish);
             console.log(`HELLO ${tMAName}!\nYOU ARE NOW AT THE MAIN MENU\nSELECT AN OPTION TO PROCEED`);
-        })
+        });
 }
+
 // BANNER ON PROGRAM LAUNCH
 function launchProgram() {
     figlet('TEAMPROFILEGENERATORBOT', function (err, banner) {
@@ -95,13 +100,14 @@ function launchProgram() {
         }
         console.log(chalk.blue(banner));
         console.log('TEAMPROFILEGENERATORBOT COPYRIGHT 2022 SHLERM INDUSTRIAL SOLUTIONS CORPORATION');
-    })
+    });
     return new Promise(resolve => {
         setTimeout(() => {
             resolve('resolved');
         }, 2000);
     });
 }
+
 // CALLS
 launchProgram()
     .then(setUptMA)

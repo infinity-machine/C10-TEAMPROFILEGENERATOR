@@ -1,5 +1,7 @@
+// REQUIRE EMPLOYEE
 const Employee = require('./employee.js')
 
+// CLASS ENGINEER
 class Engineer extends Employee {
     constructor(name, empID, eMail, gitHub) {
         super(name, empID, eMail)
@@ -13,4 +15,5 @@ class Engineer extends Employee {
     }
 }
 
+// EXPORTS
 module.exports = Engineer; 
