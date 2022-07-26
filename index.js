@@ -7,6 +7,7 @@ const TeamMngr = require('./libs/team_manager');
 const TeamMngrAdmin = require('./libs/team_manager_admin')
 const Engineer = require('./libs/engineer.js');
 const Intern = require('./libs/intern.js');
+const createTemplate = require('./libs/publish.js')
 const {
     setUpPrompt, menuPrompt, addTMPrompt, addEngPrompt, addIntPrompt,
 } = require('./libs/prompts.js');
@@ -15,11 +16,14 @@ const {
 const toPublish = [];
 // .map, .join, somethin like that process the data then write to page using template literal
 function publishTeam() {
-    fs.writeFile('team.html', JSON.stringify(toPublish),
+    fs.writeFile('team.html', createTemplate(toPublish),
         err => (err ? console.error(err) : console.log('TEAM PUBLISHED!'))
     );
-
-}
+};
+// CREDITS
+function displayCredits() {
+    launchProgram().then(menu)
+};
 
 // ADD INTERN
 function addInt() {
@@ -74,11 +78,14 @@ function menu() {
             if (data.mainMenu === 'PUBLISH TEAM') {
                 publishTeam();
             }
+            if (data.mainMenu === 'CREDITS') {
+                displayCredits();
+            }
             if (data.mainMenu === 'END PROGRAM') {
                 process.exit(0);
             }
         });
-}
+};
 
 // SET UP / ADD TEAM MANAGER ADMIN
 function setUptMA() {
@@ -89,7 +96,7 @@ function setUptMA() {
             toPublish.push(tMA);
             console.log(`HELLO ${tMAName}!\nYOU ARE NOW AT THE MAIN MENU\nSELECT AN OPTION TO PROCEED`);
         });
-}
+};
 
 // BANNER ON PROGRAM LAUNCH
 function launchProgram() {
@@ -112,3 +119,5 @@ function launchProgram() {
 launchProgram()
     .then(setUptMA)
     .then(menu);
+
+    module.exports = toPublish;

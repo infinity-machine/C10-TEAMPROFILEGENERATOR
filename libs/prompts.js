@@ -138,5 +138,5 @@ module.exports = {
     menuPrompt,
     addTMPrompt,
     addEngPrompt,
-    addIntPrompt,
+    addIntPrompt
 }
