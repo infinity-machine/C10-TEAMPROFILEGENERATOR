@@ -85,7 +85,7 @@ const addTMPrompt = [{
 {
     type: 'input',
     name: 'tMOfficeNum',
-    message: 'ENTER YOUR OFFICE NUMBER TO PROCEED'
+    message: 'ENTER OFFICE NUMBER OF NEW TEAM MANAGER'
 }]
 
 // ADD ENGINEER

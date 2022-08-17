@@ -1,20 +1,43 @@
 // REQUIRES
 const inquirer = require('inquirer');
-const fs = require('fs');
+const fs = require('fs')
 const figlet = require('figlet');
 const chalk = require('chalk');
 const TeamMngr = require('./libs/team_manager');
 const TeamMngrAdmin = require('./libs/team_manager_admin')
 const Engineer = require('./libs/engineer.js');
 const Intern = require('./libs/intern.js');
-const createTemplate = require('./libs/publish.js')
 const {
     setUpPrompt, menuPrompt, addTMPrompt, addEngPrompt, addIntPrompt,
 } = require('./libs/prompts.js');
+// EMPLOYEE CARD
+toPublish = [];
+function createEmpCard(data) {
+    for (i = 0; i < data.length; i++) {
+        return `<div>
+            <h1>${data[i].name}</h1>
+            <p>${data[i].empID}</p>
+            <p>${data[i].eMail}</p>
+            <p>${Object.values(data[i])[3]}</p>
+        </div>`
+    }
+}
 
-// PUBLISH TEAM
-const toPublish = [];
-// .map, .join, somethin like that process the data then write to page using template literal
+// HTML TEMPLATE
+function createTemplate (data) {
+    return `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GENERATED TEAM PROFILE</title>
+    </head>
+    <body>
+        ${createEmpCard(data)}
+    </body>
+    </html>`
+}
 function publishTeam() {
     fs.writeFile('team.html', createTemplate(toPublish),
         err => (err ? console.error(err) : console.log('TEAM PUBLISHED!'))
@@ -22,7 +45,7 @@ function publishTeam() {
 };
 // CREDITS
 function displayCredits() {
-    launchProgram().then(menu)
+    launchProgram().then(menu);
 };
 
 // ADD INTERN
@@ -120,4 +143,4 @@ launchProgram()
     .then(setUptMA)
     .then(menu);
 
-    module.exports = toPublish;
+module.exports = toPublish;
